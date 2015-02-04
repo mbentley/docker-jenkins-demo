@@ -19,17 +19,17 @@
         <hudson.model.StringParameterDefinition>
           <name>JENKINS_IP</name>
           <description>IP address of the instance that Jenkins is running on</description>
-          <defaultValue>54.152.22.32</defaultValue>
+          <defaultValue>192.168.56.21</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>SWARM_IP</name>
           <description>IP address of the instance that the swarm master is running on</description>
-          <defaultValue>54.152.22.32</defaultValue>
+          <defaultValue>192.168.56.21</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>SWARM_NODES</name>
           <description>Space separated list of swarm node IPs</description>
-          <defaultValue>54.152.55.59 54.84.118.113</defaultValue>
+          <defaultValue>192.168.56.21 192.168.56.22 192.168.56.23 192.168.56.24</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>REGISTRY_URL</name>
@@ -44,7 +44,7 @@
         <hudson.model.StringParameterDefinition>
           <name>INTERLOCK_DATA</name>
           <description></description>
-          <defaultValue>{&quot;hostname&quot;:&quot;docker&quot;, &quot;domain&quot;:&quot;demo.dckr.org&quot;}</defaultValue>
+          <defaultValue>{&quot;hostname&quot;:&quot;swarm01&quot;, &quot;domain&quot;:&quot;docker.vm&quot;}</defaultValue>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
