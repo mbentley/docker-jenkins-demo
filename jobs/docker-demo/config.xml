@@ -81,6 +81,16 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
+      <command>DOCKER_CMD=&quot;docker&quot;
+
+# pull the new docker images down on our swarm nodes to ensure latest image will be utilized
+nodes=&quot;${SWARM_NODES}&quot;
+for i in $nodes
+do
+  ${DOCKER_CMD} -H tcp://${i}:2375 pull mbentley/docker-demo
+done</command>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
       <command>DOCKER_CMD=&quot;docker -H tcp://${SWARM_HOST}:2375&quot;
 
 # re-create the postgres db container if the variable is set to do so
