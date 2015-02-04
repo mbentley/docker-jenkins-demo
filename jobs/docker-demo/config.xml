@@ -132,6 +132,24 @@ do
   count=$(expr $count + 1)
 done</command>
     </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
+      <command>DOCKER_CMD="docker"
+
+instances=10
+count=0
+
+# create X containers utilizing the random strategy of the swarm cluster
+while [ $count -lt $instances ]
+do
+  # remove the old container
+  ${DOCKER_CMD} -H tcp://${SWARM_IP}:12345 rm -f demo-${count} || true
+  
+  # create a new container
+  ${DOCKER_CMD} -H tcp://${SWARM_IP}:12345 run -P -d --restart=always -e TITLE="${TITLE}" -e INTERLOCK_DATA="${INTERLOCK_DATA}" --name demo-${count} ehazlett/docker-demo  
+  # increment the count
+  count=$(expr $count + 1)
+done</command>
+    </hudson.tasks.Shell>
   </builders>
   <publishers/>
   <buildWrappers/>
