@@ -17,13 +17,13 @@
           <defaultValue>Docker Demo</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
-          <name>JENKINS_IP</name>
-          <description>IP address of the instance that Jenkins is running on</description>
+          <name>JENKINS_HOST</name>
+          <description>Host of the instance that Jenkins is running on</description>
           <defaultValue>swarm01.docker.vm</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
-          <name>SWARM_IP</name>
-          <description>IP address of the instance that the swarm master is running on</description>
+          <name>SWARM_HOST</name>
+          <description>Host address of the instance that the swarm master is running on</description>
           <defaultValue>swarm01.docker.vm</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
@@ -37,8 +37,8 @@
           <defaultValue>dhe.demo.dckr.org</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
-          <name>POSTGRES_IP</name>
-          <description>IP address on which PostgreSQL container is configured</description>
+          <name>POSTGRES_HOST</name>
+          <description>Host address on which PostgreSQL container is configured</description>
           <defaultValue>swarm01.docker.vm</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
@@ -81,15 +81,33 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
+      <command>DOCKER_CMD=&quot;docker&quot;
+
+instances=10
+count=0
+
+# create X containers utilizing the random strategy of the swarm cluster
+while [ $count -lt $instances ]
+do
+  # remove the old container
+  ${DOCKER_CMD} -H tcp://${SWARM_HOST}:12345 rm -f demo-${count} || true
+  
+  # create a new container
+  ${DOCKER_CMD} -H tcp://${SWARM_HOST}:12345 run -P -d --restart=always -e TITLE=&quot;${TITLE}&quot; -e INTERLOCK_DATA=&quot;${INTERLOCK_DATA}&quot; --name demo-${count} ehazlett/docker-demo  
+  # increment the count
+  count=$(expr $count + 1)
+done</command>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
       <command>exit 0
 DOCKER_CMD=&quot;docker --tlsverify --tlscacert=/etc/docker/ca.pem --tlskey=/etc/docker/server-key.pem --tlscert=/etc/docker/server.pem&quot;
 
 # build the demo using the existing Dockerfile and tag the image
 cd demo_pq
-${DOCKER_CMD} -H tcp://${JENKINS_IP}:2376 build --rm -t ${REGISTRY_URL}/demo/docker-demo .
+${DOCKER_CMD} -H tcp://${JENKINS_HOST}:2376 build --rm -t ${REGISTRY_URL}/demo/docker-demo .
 
 # push the new docker image to Docker Hub Enterprise
-${DOCKER_CMD} -H tcp://${JENKINS_IP}:2376 push ${REGISTRY_URL}/demo/docker-demo</command>
+${DOCKER_CMD} -H tcp://${JENKINS_HOST}:2376 push ${REGISTRY_URL}/demo/docker-demo</command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
       <command>exit 0
@@ -109,8 +127,8 @@ DOCKER_CMD=&quot;docker --tlsverify --tlscacert=/etc/docker/ca.pem --tlskey=/etc
 # re-create the postgres db container if the variable is set to do so
 if [ &quot;$RESETPG&quot; = true ]
 then
-  ${DOCKER_CMD} -H tcp://${JENKINS_IP}:2376 rm -f postgres || true
-  ${DOCKER_CMD} -H tcp://${JENKINS_IP}:2376 run -d --restart=always --name postgres -p 5432:5432 -e POSTGRES_USER=demo -e POSTGRES_PASSWORD=demo postgres:latest
+  ${DOCKER_CMD} -H tcp://${JENKINS_HOST}:2376 rm -f postgres || true
+  ${DOCKER_CMD} -H tcp://${JENKINS_HOST}:2376 run -d --restart=always --name postgres -p 5432:5432 -e POSTGRES_USER=demo -e POSTGRES_PASSWORD=demo postgres:latest
 fi</command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
@@ -124,28 +142,10 @@ count=0
 while [ $count -lt $instances ]
 do
   # remove the old container
-  ${DOCKER_CMD} -H tcp://${SWARM_IP}:3376 rm -f demo-${count} || true
+  ${DOCKER_CMD} -H tcp://${SWARM_HOST}:3376 rm -f demo-${count} || true
   
   # create a new container
-  ${DOCKER_CMD} -H tcp://${SWARM_IP}:3376 run -P -d --restart=always -e TITLE=&quot;${TITLE}&quot; -e DB_PORT_5432_TCP_ADDR=&quot;${POSTGRES_IP}&quot; -e DB_PORT_5432_TCP_PORT=&quot;5432&quot; -e DB_USER=&quot;demo&quot; -e DB_PASS=&quot;demo&quot; -e DB_NAME=&quot;demo&quot; -e DB_SSL_MODE=&quot;disable&quot; -e INTERLOCK_DATA=&quot;${INTERLOCK_DATA}&quot; --name demo-${count} ${REGISTRY_URL}/demo/docker-demo  
-  # increment the count
-  count=$(expr $count + 1)
-done</command>
-    </hudson.tasks.Shell>
-    <hudson.tasks.Shell>
-      <command>DOCKER_CMD="docker"
-
-instances=10
-count=0
-
-# create X containers utilizing the random strategy of the swarm cluster
-while [ $count -lt $instances ]
-do
-  # remove the old container
-  ${DOCKER_CMD} -H tcp://${SWARM_IP}:12345 rm -f demo-${count} || true
-  
-  # create a new container
-  ${DOCKER_CMD} -H tcp://${SWARM_IP}:12345 run -P -d --restart=always -e TITLE="${TITLE}" -e INTERLOCK_DATA="${INTERLOCK_DATA}" --name demo-${count} ehazlett/docker-demo  
+  ${DOCKER_CMD} -H tcp://${SWARM_HOST}:3376 run -P -d --restart=always -e TITLE=&quot;${TITLE}&quot; -e DB_PORT_5432_TCP_ADDR=&quot;${POSTGRES_HOST}&quot; -e DB_PORT_5432_TCP_PORT=&quot;5432&quot; -e DB_USER=&quot;demo&quot; -e DB_PASS=&quot;demo&quot; -e DB_NAME=&quot;demo&quot; -e DB_SSL_MODE=&quot;disable&quot; -e INTERLOCK_DATA=&quot;${INTERLOCK_DATA}&quot; --name demo-${count} ${REGISTRY_URL}/demo/docker-demo  
   # increment the count
   count=$(expr $count + 1)
 done</command>
