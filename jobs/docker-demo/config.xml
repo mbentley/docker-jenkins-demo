@@ -19,17 +19,17 @@
         <hudson.model.StringParameterDefinition>
           <name>JENKINS_IP</name>
           <description>IP address of the instance that Jenkins is running on</description>
-          <defaultValue>192.168.56.21</defaultValue>
+          <defaultValue>swarm01.docker.vm</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>SWARM_IP</name>
           <description>IP address of the instance that the swarm master is running on</description>
-          <defaultValue>192.168.56.21</defaultValue>
+          <defaultValue>swarm01.docker.vm</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>SWARM_NODES</name>
           <description>Space separated list of swarm node IPs</description>
-          <defaultValue>192.168.56.21 192.168.56.22 192.168.56.23 192.168.56.24</defaultValue>
+          <defaultValue>swarm01.docker.vm swarm02.docker.vm swarm03.docker.vm swarm04.docker.vm</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>REGISTRY_URL</name>
@@ -39,12 +39,12 @@
         <hudson.model.StringParameterDefinition>
           <name>POSTGRES_IP</name>
           <description>IP address on which PostgreSQL container is configured</description>
-          <defaultValue>172.31.20.135</defaultValue>
+          <defaultValue>swarm01.docker.vm</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>INTERLOCK_DATA</name>
           <description></description>
-          <defaultValue>{&quot;hostname&quot;:&quot;swarm01&quot;, &quot;domain&quot;:&quot;docker.vm&quot;}</defaultValue>
+          <defaultValue>{&quot;hostname&quot;:&quot;demo&quot;, &quot;domain&quot;:&quot;swarm01.docker.vm&quot;}</defaultValue>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
