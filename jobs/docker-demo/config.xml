@@ -23,18 +23,18 @@
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>SWARM_HOST</name>
-          <description>Host address of the instance that the swarm master is running on</description>
-          <defaultValue>swarm01.docker.vm</defaultValue>
+          <description>Host address of the instance that the swarm manager is running on</description>
+          <defaultValue>enterprise.docker.vm</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>SWARM_NODES</name>
           <description>Space separated list of swarm node IPs</description>
-          <defaultValue>swarm01.docker.vm swarm02.docker.vm swarm03.docker.vm swarm04.docker.vm</defaultValue>
+          <defaultValue>swarm01.docker.vm swarm02.docker.vm swarm03.docker.vm swarm04.docker.vm swarm05.docker.vm swarm06.docker.vm</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>REGISTRY_URL</name>
           <description>URL of the DHE or open source registry</description>
-          <defaultValue>dhe.demo.dckr.org</defaultValue>
+          <defaultValue>enterprise.docker.vm</defaultValue>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>POSTGRES_HOST</name>
